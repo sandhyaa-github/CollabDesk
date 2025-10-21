@@ -9,3 +9,5 @@ echo "Applying migrations..."
 python3 manage.py migrate
 
 echo "Migrations applied successfully."
+touch common/__init__.py
+
