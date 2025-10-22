@@ -41,10 +41,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'django_filters',
     'corsheaders',
     'rest_framework_simplejwt',
     'oauth2_provider',
-    'user'
+    'user',
+    'common'
 ]
 
 MIDDLEWARE = [
@@ -150,12 +152,74 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    "PAGE_SIZE": 10
+    "PAGE_SIZE": 10,
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'EXCEPTION_HANDLER': 'common.exception.custom_exception_handler',
 }
+
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=20),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': True,
+}
+
+LOGS_DIR = os.path.join(BASE_DIR, 'logs')
+os.makedirs(LOGS_DIR, exist_ok=True)
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+
+    # --- Format of log messages ---
+    'formatters': {
+        "verbose": {
+            "format": '[{asctime}] {levelname} {name} {module}:{lineno} - {message}',
+            "style": "{",
+        },
+        "simple": {
+            "format": '{levelname} {message}',
+            "style": "{",
+        },
+    },
+
+    # --- Handlers (where logs go) ---
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+        'file': {
+            "level": "INFO",
+            'class': 'logging.FileHandler',
+            "filename": str(os.path.join(LOGS_DIR, 'app.log')),
+            'formatter': 'simple',
+            'level': 'WARNING',
+        },
+        # "console": {
+        #     "class": "logging.StreamHandler",
+        #     "formatter": "simple",
+        # },
+    },
+
+    # --- Loggers (who uses them) ---
+    'loggers': {
+        "django": {
+            "handlers": ["file", "console"],
+            "level": "INFO",
+            "propagate": True,
+        },
+        # App-level logger - use this in your app code: logging.getLogger("user")
+        "user": {
+            "handlers": ["file"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        # catch-all root logger if you want
+        "": {
+            "handlers": ["console"],
+            "level": "WARNING",
+        },
+    },
 }
