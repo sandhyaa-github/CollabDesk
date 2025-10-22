@@ -28,8 +28,10 @@ class RegisterView(APIView):
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            logger.exception("User registration failed for payload: %s", request.data)
+            logger.exception(
+                "User registration failed for payload: %s", request.data)
             return Response({"error": "Internal server error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 class UserListView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -57,8 +59,8 @@ class UserListView(APIView):
             serializer = UserSerializer(paginated_users, many=True)
             return paginator.get_paginated_response(serializer.data)
         except Exception as e:
-            logger.error(f"Users list failed: {e}")
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            logger.exception("User list failed for payload: %s", request.data)
+            return Response({"error": "Internal server error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class UserRetrieveUpdateDelete(APIView):
@@ -70,8 +72,9 @@ class UserRetrieveUpdateDelete(APIView):
             serializer = UserSerializer(user)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
-            logger.error(f"Get user details failed: {e}")
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            logger.exception(
+                "User detail failed for payload: %s", request.data)
+            return Response({"error": "Internal server error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def put(self, request, pk):
         try:
@@ -82,8 +85,9 @@ class UserRetrieveUpdateDelete(APIView):
                 serializer.save()
                 return Response(serializer.data)
         except Exception as e:
-            logger.error(f"User update failed: {e}")
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            logger.exception(
+                "User update failed for payload: %s", request.data)
+            return Response({"error": "Internal server error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def patch(self, request, pk):
         try:
@@ -93,8 +97,10 @@ class UserRetrieveUpdateDelete(APIView):
                 serializer.save()
                 return Response(serializer.data)
         except Exception as e:
-            logger.error(f"User update failed: {e}")
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            logger.exception(
+                "User update failed for payload: %s", request.data)
+            return Response({"error": "Internal server error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
         try:
@@ -102,5 +108,6 @@ class UserRetrieveUpdateDelete(APIView):
             user.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
-            logger.error(f"User delete failed: {e}")
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+            logger.exception(
+                "User delete failed for payload: %s", request.data)
+            return Response({"error": "Internal server error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
