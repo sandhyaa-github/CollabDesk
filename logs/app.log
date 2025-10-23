@@ -2,3 +2,7 @@ WARNING Unauthorized: /api/v1/users/list/
 WARNING "GET /api/v1/users/list/ HTTP/1.1" 401 98
 WARNING Unauthorized: /api/v1/users/list/
 WARNING "GET /api/v1/users/list/ HTTP/1.1" 401 98
+WARNING Unauthorized: /api/v1/users/list/
+WARNING "GET /api/v1/users/list/ HTTP/1.1" 401 98
+WARNING Not Found: /favicon.ico
+WARNING "GET /favicon.ico HTTP/1.1" 404 2726

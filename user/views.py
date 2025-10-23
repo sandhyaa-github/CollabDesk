@@ -49,13 +49,18 @@ class UserListView(APIView):
                     | Q(first_name__icontains=search)
                     | Q(email__icontains=search)
                 )
-            user_filter = UserFilter(request.GET, queryset=users)
-            users = user_filter.qs
+            user_filter = UserFilter(request.query_params, queryset=users)
+            users = user_filter.qs.distinct()
+
             ordering = request.query_params.get('ordering')
             if ordering:
                 users = users.order_by(ordering)
+            else:
+                users = users.order_by('id')
+
             paginator = self.pagination_class()
             paginated_users = paginator.paginate_queryset(users, request)
+
             serializer = UserSerializer(paginated_users, many=True)
             return paginator.get_paginated_response(serializer.data)
         except Exception as e:
