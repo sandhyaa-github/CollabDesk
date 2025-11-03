@@ -83,7 +83,6 @@ class UserRetrieveUpdateDelete(APIView):
 
     def put(self, request, pk):
         try:
-
             user = get_object_or_404(User, pk=pk)
             serializer = UserSerializer(user, data=request.data, partial=False)
             if serializer.is_valid():
@@ -114,5 +113,5 @@ class UserRetrieveUpdateDelete(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
             logger.exception(
-                "User delete failed for payload: %s", request.data)
+                "User delete failed: %s", request.data)
             return Response({"error": "Internal server error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

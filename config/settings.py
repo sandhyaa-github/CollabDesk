@@ -14,6 +14,7 @@ from datetime import timedelta
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -46,6 +47,11 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'oauth2_provider',
     'user',
+    'organization',
+    'project',
+    'task',
+    'comment',
+    'analytics'
 ]
 
 MIDDLEWARE = [
@@ -92,7 +98,7 @@ DATABASES = {
         'PORT': os.getenv('DB_PORT'),
     }
 }
-
+print(os.getenv('DB_PASSWORD'), os.getenv('DB_USER'))
 
 # DATABASES = {
 #     'default': {
